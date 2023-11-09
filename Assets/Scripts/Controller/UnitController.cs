@@ -1,9 +1,9 @@
-using StarterAssets;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
+[RequireComponent(typeof(ART_Inputs), typeof(PlayerInput))]
 public class UnitController : MonoBehaviour
 {
     [SerializeField] private UnitArmature[] _unitArmatures;
@@ -94,7 +94,7 @@ public class UnitController : MonoBehaviour
 #endif
     private Animator _animator;
     private CharacterController _controller;
-    private StarterAssetsInputs _input;
+    private ART_Inputs _input;
     private GameObject _mainCamera;
 
     private const float _threshold = 0.01f;
@@ -127,7 +127,7 @@ public class UnitController : MonoBehaviour
     {
         _currentUnit = _unitArmatures[0];
         InitUnitArmature();
-        _input = GetComponent<StarterAssetsInputs>();
+        _input = GetComponent<ART_Inputs>();
 #if ENABLE_INPUT_SYSTEM
         _playerInput = GetComponent<PlayerInput>();
 #else
