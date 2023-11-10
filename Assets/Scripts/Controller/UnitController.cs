@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -8,6 +9,7 @@ public class UnitController : MonoBehaviour
 {
     [SerializeField] private UnitArmature[] _unitArmatures;
     [SerializeField] private UnitArmature _currentUnit;
+    private int _currentUnitIndex = 0;
 
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -125,8 +127,8 @@ public class UnitController : MonoBehaviour
 
     private void Start()
     {
-        _currentUnit = _unitArmatures[0];
-        InitUnitArmature();
+        InitUnitArmature(_currentUnitIndex);
+
         _input = GetComponent<ART_Inputs>();
 #if ENABLE_INPUT_SYSTEM
         _playerInput = GetComponent<PlayerInput>();
@@ -141,9 +143,16 @@ public class UnitController : MonoBehaviour
         _fallTimeoutDelta = FallTimeout;
     }
 
-    private void InitUnitArmature()
+    private void InitUnitArmature(int unitIndex)
     {
+        if (_currentUnit != null)
+        {
+            _currentUnit.EnableUnitCamera(false);
+        }
+
+        _currentUnit = _unitArmatures[unitIndex];
         _currentUnit.EnableUnitCamera(true);
+
         CinemachineCameraTarget = _currentUnit.getCameraRoot;
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
@@ -159,6 +168,7 @@ public class UnitController : MonoBehaviour
         JumpAndGravity();
         GroundedCheck();
         Move();
+        SwitchUnit();
     }
 
     private void LateUpdate()
@@ -368,5 +378,48 @@ public class UnitController : MonoBehaviour
         Gizmos.DrawSphere(
             new Vector3(_currentUnit.transform.position.x, _currentUnit.transform.position.y - GroundedOffset, _currentUnit.transform.position.z),
             GroundedRadius);
+    }
+
+    private void SwitchUnit()
+    {
+        if (_unitArmatures.Length > 0)
+        {
+            ChooseNext();
+            ChoosePrev();
+        }
+    }
+
+    private void ChooseNext()
+    {
+        if (_input.nextUnit)
+        {
+            _input.nextUnit = false;
+            if (_currentUnitIndex < _unitArmatures.Length - 1)
+            {
+                _currentUnitIndex++;
+            }
+            else
+            {
+                _currentUnitIndex = 0;
+            }
+            InitUnitArmature(_currentUnitIndex);
+        }
+    }
+
+    private void ChoosePrev()
+    {
+        if (_input.prevUnit)
+        {
+            _input.prevUnit = false;
+            if (_currentUnitIndex > 0)
+            {
+                _currentUnitIndex--;
+            }
+            else
+            {
+                _currentUnitIndex = _unitArmatures.Length - 1;
+            }
+            InitUnitArmature(_currentUnitIndex);
+        }
     }
 }

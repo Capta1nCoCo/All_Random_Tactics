@@ -10,6 +10,8 @@ public class ART_Inputs : MonoBehaviour
     public Vector2 look;
     public bool jump;
     public bool sprint;
+    public bool nextUnit;
+    public bool prevUnit;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -41,6 +43,16 @@ public class ART_Inputs : MonoBehaviour
     {
         SprintInput(value.isPressed);
     }
+
+    public void OnNextUnit(InputValue value)
+    {
+        NextUnitInput(value.isPressed);
+    }
+
+    public void OnPrevUnit(InputValue value)
+    {
+        PrevUnitInput(value.isPressed);
+    }
 #endif
 
 
@@ -62,6 +74,16 @@ public class ART_Inputs : MonoBehaviour
     public void SprintInput(bool newSprintState)
     {
         sprint = newSprintState;
+    }
+
+    public void NextUnitInput(bool newNextUnitState)
+    {
+        nextUnit = newNextUnitState;
+    }
+
+    public void PrevUnitInput(bool newPrevUnitState)
+    {
+        prevUnit = newPrevUnitState;
     }
 
     private void OnApplicationFocus(bool hasFocus)
