@@ -6,19 +6,31 @@ using UnityEngine.InputSystem;
 public class ART_Inputs : MonoBehaviour
 {
     [Header("Character Input Values")]
-    public Vector2 move;
-    public Vector2 look;
-    public bool jump;
-    public bool sprint;
-    public bool nextUnit;
-    public bool prevUnit;
+    [SerializeField] private Vector2 move;
+    [SerializeField] private Vector2 look;
+    [SerializeField] private bool jump;
+    [SerializeField] private bool sprint;
+    [SerializeField] private bool nextUnit;
+    [SerializeField] private bool prevUnit;
 
     [Header("Movement Settings")]
-    public bool analogMovement;
+    [SerializeField] private bool analogMovement;
 
     [Header("Mouse Cursor Settings")]
-    public bool cursorLocked = true;
-    public bool cursorInputForLook = true;
+    [SerializeField] private bool cursorLocked = true;
+    [SerializeField] private bool cursorInputForLook = true;
+
+    public Vector2 getMove { get { return move; } }
+    public Vector2 getLook { get { return look; } }
+    public bool getJump { get { return jump; } }
+    public bool getSprint { get { return sprint; } }
+    public bool getNextUnit { get { return nextUnit; } }
+    public bool getPrevUnit { get { return prevUnit; } }
+    public bool getAnalogMovement { get { return analogMovement; } }
+
+    public bool setJump { set { jump = value; } }
+    public bool setNextUnit { set { nextUnit = value; } }
+    public bool setPrevUnit { set { prevUnit = value; } }
 
 #if ENABLE_INPUT_SYSTEM
     public void OnMove(InputValue value)
@@ -56,32 +68,32 @@ public class ART_Inputs : MonoBehaviour
 #endif
 
 
-    public void MoveInput(Vector2 newMoveDirection)
+    private void MoveInput(Vector2 newMoveDirection)
     {
         move = newMoveDirection;
     }
 
-    public void LookInput(Vector2 newLookDirection)
+    private void LookInput(Vector2 newLookDirection)
     {
         look = newLookDirection;
     }
 
-    public void JumpInput(bool newJumpState)
+    private void JumpInput(bool newJumpState)
     {
         jump = newJumpState;
     }
 
-    public void SprintInput(bool newSprintState)
+    private void SprintInput(bool newSprintState)
     {
         sprint = newSprintState;
     }
 
-    public void NextUnitInput(bool newNextUnitState)
+    private void NextUnitInput(bool newNextUnitState)
     {
         nextUnit = newNextUnitState;
     }
 
-    public void PrevUnitInput(bool newPrevUnitState)
+    private void PrevUnitInput(bool newPrevUnitState)
     {
         prevUnit = newPrevUnitState;
     }
