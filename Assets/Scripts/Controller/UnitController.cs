@@ -4,12 +4,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
-[RequireComponent(typeof(ART_Inputs), typeof(PlayerInput))]
+[RequireComponent(typeof(ART_Inputs), typeof(PlayerInput), typeof(UnitSwitcher))]
 public class UnitController : MonoBehaviour
 {
-    [SerializeField] private UnitArmature[] _unitArmatures;
     [SerializeField] private UnitArmature _currentUnit;
-    private int _currentUnitIndex = 0;
 
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -68,6 +66,8 @@ public class UnitController : MonoBehaviour
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
 
+    private const float _threshold = 0.01f;
+
     // cinemachine
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
@@ -91,6 +91,8 @@ public class UnitController : MonoBehaviour
     private int _animIDFreeFall;
     private int _animIDMotionSpeed;
 
+    private bool _hasAnimator;
+
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
 #endif
@@ -99,9 +101,7 @@ public class UnitController : MonoBehaviour
     private ART_Inputs _input;
     private GameObject _mainCamera;
 
-    private const float _threshold = 0.01f;
-
-    private bool _hasAnimator;
+    private UnitSwitcher _unitSwitcher;
 
     private bool IsCurrentDeviceMouse
     {
@@ -123,11 +123,6 @@ public class UnitController : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
-    }
-
-    private void Start()
-    {
-        InitUnitArmature(_currentUnitIndex);
 
         _input = GetComponent<ART_Inputs>();
 #if ENABLE_INPUT_SYSTEM
@@ -135,6 +130,14 @@ public class UnitController : MonoBehaviour
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
+        _unitSwitcher = GetComponent<UnitSwitcher>();
+    }
+
+    private void Start()
+    {
+        //InitUnitArmature(_currentUnitIndex);
+        _unitSwitcher.Init(_input, InitUnitArmature);
+        InitUnitArmature(_unitSwitcher.getNewUnitArmature);
 
         AssignAnimationIDs();
 
@@ -143,14 +146,14 @@ public class UnitController : MonoBehaviour
         _fallTimeoutDelta = FallTimeout;
     }
 
-    private void InitUnitArmature(int unitIndex)
+    private void InitUnitArmature(UnitArmature currentUnit)
     {
         if (_currentUnit != null)
         {
             _currentUnit.EnableUnitCamera(false);
         }
 
-        _currentUnit = _unitArmatures[unitIndex];
+        _currentUnit = currentUnit;
         _currentUnit.EnableUnitCamera(true);
 
         CinemachineCameraTarget = _currentUnit.getCameraRoot;
@@ -168,7 +171,6 @@ public class UnitController : MonoBehaviour
         JumpAndGravity();
         GroundedCheck();
         Move();
-        SwitchUnit();
     }
 
     private void LateUpdate()
@@ -378,48 +380,5 @@ public class UnitController : MonoBehaviour
         Gizmos.DrawSphere(
             new Vector3(_currentUnit.transform.position.x, _currentUnit.transform.position.y - GroundedOffset, _currentUnit.transform.position.z),
             GroundedRadius);
-    }
-
-    private void SwitchUnit()
-    {
-        if (_unitArmatures.Length > 0)
-        {
-            ChooseNext();
-            ChoosePrev();
-        }
-    }
-
-    private void ChooseNext()
-    {
-        if (_input.getNextUnit)
-        {
-            _input.setNextUnit = false;
-            if (_currentUnitIndex < _unitArmatures.Length - 1)
-            {
-                _currentUnitIndex++;
-            }
-            else
-            {
-                _currentUnitIndex = 0;
-            }
-            InitUnitArmature(_currentUnitIndex);
-        }
-    }
-
-    private void ChoosePrev()
-    {
-        if (_input.getPrevUnit)
-        {
-            _input.setPrevUnit = false;
-            if (_currentUnitIndex > 0)
-            {
-                _currentUnitIndex--;
-            }
-            else
-            {
-                _currentUnitIndex = _unitArmatures.Length - 1;
-            }
-            InitUnitArmature(_currentUnitIndex);
-        }
     }
 }

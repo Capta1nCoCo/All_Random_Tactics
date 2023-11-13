@@ -941,6 +941,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 978120332}
+  - component: {fileID: 978120335}
   - component: {fileID: 978120331}
   - component: {fileID: 978120334}
   - component: {fileID: 978120333}
@@ -963,10 +964,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b6c203f2d988242b62badf28601d58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _unitArmatures:
-  - {fileID: 7583911150632800204}
-  - {fileID: 509257899}
-  - {fileID: 855128400}
   _currentUnit: {fileID: 0}
   MoveSpeed: 2
   SprintSpeed: 5.335
@@ -1122,6 +1119,22 @@ MonoBehaviour:
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
+--- !u!114 &978120335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978120330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c821e65bea9a1242b716c0797daff91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitArmatures:
+  - {fileID: 7583911150632800204}
+  - {fileID: 509257899}
+  - {fileID: 855128400}
 --- !u!1 &994611488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2376,7 +2389,7 @@ PrefabInstance:
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.20000005
+      value: -4.8
       objectReference: {fileID: 0}
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
