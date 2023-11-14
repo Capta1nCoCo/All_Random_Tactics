@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 #endif
 
 [RequireComponent(typeof(ART_Inputs), typeof(PlayerInput), typeof(UnitSwitcher))]
+[RequireComponent(typeof(UnitGravity))]
 public class UnitController : MonoBehaviour
 {
     [SerializeField] private UnitArmature _currentUnit;
@@ -22,33 +23,6 @@ public class UnitController : MonoBehaviour
 
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
-
-    [Space(10)]
-    [Tooltip("The height the player can jump")]
-    public float JumpHeight = 1.2f;
-
-    [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
-    public float Gravity = -15.0f;
-
-    [Space(10)]
-    [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
-    public float JumpTimeout = 0.50f;
-
-    [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
-    public float FallTimeout = 0.15f;
-
-    [Header("Player Grounded")]
-    [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
-    public bool Grounded = true;
-
-    [Tooltip("Useful for rough ground")]
-    public float GroundedOffset = -0.14f;
-
-    [Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-    public float GroundedRadius = 0.28f;
-
-    [Tooltip("What layers the character uses as ground")]
-    public LayerMask GroundLayers;
 
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -77,12 +51,6 @@ public class UnitController : MonoBehaviour
     private float _animationBlend;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
-    private float _verticalVelocity;
-    private float _terminalVelocity = 53.0f;
-
-    // timeout deltatime
-    private float _jumpTimeoutDelta;
-    private float _fallTimeoutDelta;
 
     // animation IDs
     private int _animIDSpeed;
@@ -102,6 +70,7 @@ public class UnitController : MonoBehaviour
     private GameObject _mainCamera;
 
     private UnitSwitcher _unitSwitcher;
+    private UnitGravity _unitGravity;
 
     private bool IsCurrentDeviceMouse
     {
@@ -131,19 +100,16 @@ public class UnitController : MonoBehaviour
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
         _unitSwitcher = GetComponent<UnitSwitcher>();
+        _unitGravity = GetComponent<UnitGravity>();
     }
 
     private void Start()
     {
-        //InitUnitArmature(_currentUnitIndex);
         _unitSwitcher.Init(_input, InitUnitArmature);
+        _unitGravity.Init(this, _input);
         InitUnitArmature(_unitSwitcher.getNewUnitArmature);
 
         AssignAnimationIDs();
-
-        // reset our timeouts on start
-        _jumpTimeoutDelta = JumpTimeout;
-        _fallTimeoutDelta = FallTimeout;
     }
 
     private void InitUnitArmature(UnitArmature currentUnit)
@@ -154,6 +120,7 @@ public class UnitController : MonoBehaviour
         }
 
         _currentUnit = currentUnit;
+        _unitGravity.setCurrentUnit = currentUnit;
         _currentUnit.EnableUnitCamera(true);
 
         CinemachineCameraTarget = _currentUnit.getCameraRoot;
@@ -168,8 +135,6 @@ public class UnitController : MonoBehaviour
     {
         _hasAnimator = _animator != null;
 
-        JumpAndGravity();
-        GroundedCheck();
         Move();
     }
 
@@ -185,21 +150,6 @@ public class UnitController : MonoBehaviour
         _animIDJump = Animator.StringToHash("Jump");
         _animIDFreeFall = Animator.StringToHash("FreeFall");
         _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-    }
-
-    private void GroundedCheck()
-    {
-        // set sphere position, with offset
-        Vector3 spherePosition = new Vector3(_currentUnit.transform.position.x, _currentUnit.transform.position.y - GroundedOffset,
-            _currentUnit.transform.position.z);
-        Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
-            QueryTriggerInteraction.Ignore);
-
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetBool(_animIDGrounded, Grounded);
-        }
     }
 
     private void CameraRotation()
@@ -281,82 +231,13 @@ public class UnitController : MonoBehaviour
 
         // move the player
         _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                         new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                         new Vector3(0.0f, _unitGravity.getVerticalVelocity, 0.0f) * Time.deltaTime);
 
         // update animator if using character
         if (_hasAnimator)
         {
             _animator.SetFloat(_animIDSpeed, _animationBlend);
             _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-        }
-    }
-
-    private void JumpAndGravity()
-    {
-        if (Grounded)
-        {
-            // reset the fall timeout timer
-            _fallTimeoutDelta = FallTimeout;
-
-            // update animator if using character
-            if (_hasAnimator)
-            {
-                _animator.SetBool(_animIDJump, false);
-                _animator.SetBool(_animIDFreeFall, false);
-            }
-
-            // stop our velocity dropping infinitely when grounded
-            if (_verticalVelocity < 0.0f)
-            {
-                _verticalVelocity = -2f;
-            }
-
-            // Jump
-            if (_input.getJump && _jumpTimeoutDelta <= 0.0f)
-            {
-                // the square root of H * -2 * G = how much velocity needed to reach desired height
-                _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
-                // update animator if using character
-                if (_hasAnimator)
-                {
-                    _animator.SetBool(_animIDJump, true);
-                }
-            }
-
-            // jump timeout
-            if (_jumpTimeoutDelta >= 0.0f)
-            {
-                _jumpTimeoutDelta -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            // reset the jump timeout timer
-            _jumpTimeoutDelta = JumpTimeout;
-
-            // fall timeout
-            if (_fallTimeoutDelta >= 0.0f)
-            {
-                _fallTimeoutDelta -= Time.deltaTime;
-            }
-            else
-            {
-                // update animator if using character
-                if (_hasAnimator)
-                {
-                    _animator.SetBool(_animIDFreeFall, true);
-                }
-            }
-
-            // if we are not grounded, do not jump
-            _input.setJump = false;
-        }
-
-        // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-        if (_verticalVelocity < _terminalVelocity)
-        {
-            _verticalVelocity += Gravity * Time.deltaTime;
         }
     }
 
@@ -367,18 +248,42 @@ public class UnitController : MonoBehaviour
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
     }
 
-    private void OnDrawGizmosSelected()
+    // Animation Public Methods
+    // TODO: Encapsulate into a separate class
+    public void ResetGravityBasedAnimations()
     {
-        Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-        Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
+        // update animator if using character
+        if (_hasAnimator)
+        {
+            _animator.SetBool(_animIDJump, false);
+            _animator.SetBool(_animIDFreeFall, false);
+        }
+    }
 
-        if (Grounded) Gizmos.color = transparentGreen;
-        else Gizmos.color = transparentRed;
+    public void ApplyJumpAnimation()
+    {
+        // update animator if using character
+        if (_hasAnimator)
+        {
+            _animator.SetBool(_animIDJump, true);
+        }
+    }
 
-        if (_currentUnit == null) { return; }
-        // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-        Gizmos.DrawSphere(
-            new Vector3(_currentUnit.transform.position.x, _currentUnit.transform.position.y - GroundedOffset, _currentUnit.transform.position.z),
-            GroundedRadius);
+    public void ApplyFreeFallAnimation()
+    {
+        // update animator if using character
+        if (_hasAnimator)
+        {
+            _animator.SetBool(_animIDFreeFall, true);
+        }
+    }
+
+    public void ApplyGroundedAnimation(bool Grounded)
+    {
+        // update animator if using character
+        if (_hasAnimator)
+        {
+            _animator.SetBool(_animIDGrounded, Grounded);
+        }
     }
 }

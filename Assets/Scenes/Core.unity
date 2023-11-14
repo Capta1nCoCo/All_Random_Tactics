@@ -943,6 +943,7 @@ GameObject:
   - component: {fileID: 978120332}
   - component: {fileID: 978120335}
   - component: {fileID: 978120331}
+  - component: {fileID: 978120336}
   - component: {fileID: 978120334}
   - component: {fileID: 978120333}
   m_Layer: 0
@@ -969,16 +970,6 @@ MonoBehaviour:
   SprintSpeed: 5.335
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
-  JumpHeight: 1.2
-  Gravity: -15
-  JumpTimeout: 0.5
-  FallTimeout: 0.15
-  Grounded: 1
-  GroundedOffset: -0.14
-  GroundedRadius: 0.28
-  GroundLayers:
-    serializedVersion: 2
-    m_Bits: 64
   CinemachineCameraTarget: {fileID: 0}
   TopClamp: 70
   BottomClamp: -30
@@ -1135,6 +1126,28 @@ MonoBehaviour:
   - {fileID: 7583911150632800204}
   - {fileID: 509257899}
   - {fileID: 855128400}
+--- !u!114 &978120336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978120330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a7be47c1bafe174ead7c0ba830f4ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Grounded: 1
+  JumpTimeout: 0.5
+  FallTimeout: 0.15
+  JumpHeight: 1.2
+  Gravity: -15
+  GroundedOffset: -0.14
+  GroundedRadius: 0.28
+  GroundLayers:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &994611488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2389,7 +2402,7 @@ PrefabInstance:
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.8
+      value: -9.8
       objectReference: {fileID: 0}
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
