@@ -943,6 +943,7 @@ GameObject:
   - component: {fileID: 978120332}
   - component: {fileID: 978120335}
   - component: {fileID: 978120331}
+  - component: {fileID: 978120337}
   - component: {fileID: 978120336}
   - component: {fileID: 978120334}
   - component: {fileID: 978120333}
@@ -966,10 +967,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentUnit: {fileID: 0}
-  MoveSpeed: 2
-  SprintSpeed: 5.335
-  RotationSmoothTime: 0.12
-  SpeedChangeRate: 10
   CinemachineCameraTarget: {fileID: 0}
   TopClamp: 70
   BottomClamp: -30
@@ -1148,6 +1145,22 @@ MonoBehaviour:
   GroundLayers:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &978120337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978120330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 441c2b0e3209a94459be19118218d945, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveSpeed: 2
+  SprintSpeed: 5.335
+  RotationSmoothTime: 0.12
+  SpeedChangeRate: 10
 --- !u!1 &994611488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2402,7 +2415,7 @@ PrefabInstance:
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.8
+      value: 0.20000005
       objectReference: {fileID: 0}
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}

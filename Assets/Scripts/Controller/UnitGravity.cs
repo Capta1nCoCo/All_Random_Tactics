@@ -36,7 +36,7 @@ public class UnitGravity : MonoBehaviour
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
 
-    private UnitController _unitAnimator;
+    private UnitController _unitAnimations;
     private UnitArmature _currentUnit;
     private ART_Inputs _input;
 
@@ -52,7 +52,7 @@ public class UnitGravity : MonoBehaviour
 
     public void Init(UnitController unitAnimator, ART_Inputs input)
     {
-        _unitAnimator = unitAnimator;
+        _unitAnimations = unitAnimator;
         _input = input;
     }
 
@@ -79,7 +79,7 @@ public class UnitGravity : MonoBehaviour
     private void PocessJumping()
     {
         ResetFallTimeoutTimer();
-        _unitAnimator.ResetGravityBasedAnimations();
+        _unitAnimations.ResetGravityBasedAnimations();
         StopVelocityDropping();
         Jump();
         ApplyJumpTimeout();
@@ -106,7 +106,7 @@ public class UnitGravity : MonoBehaviour
         if (_input.getJump && _jumpTimeoutDelta <= 0.0f)
         {
             CalculateJumpVelocity();
-            _unitAnimator.ApplyJumpAnimation();
+            _unitAnimations.ApplyJumpAnimation();
         }
     }
 
@@ -147,7 +147,7 @@ public class UnitGravity : MonoBehaviour
         }
         else
         {
-            _unitAnimator.ApplyFreeFallAnimation();
+            _unitAnimations.ApplyFreeFallAnimation();
         }
     }
 
@@ -174,7 +174,7 @@ public class UnitGravity : MonoBehaviour
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
             QueryTriggerInteraction.Ignore);
 
-        _unitAnimator.ApplyGroundedAnimation(Grounded);
+        _unitAnimations.ApplyGroundedAnimation(Grounded);
     }
 
     private void OnDrawGizmosSelected()
