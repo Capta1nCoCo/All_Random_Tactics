@@ -23,7 +23,8 @@ public class UnitMovement : MonoBehaviour
     private float _rotationVelocity;
 
     private ART_Inputs _input;
-    private UnitController _unitAnimations;
+    private UnitAnimations _unitAnimations;
+
     private GameObject _mainCamera;
     private UnitGravity _unitGravity;
 
@@ -42,9 +43,9 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void Init(UnitController unitAnimator, ART_Inputs input, UnitGravity unitGravity)
+    public void Init(UnitAnimations animations, ART_Inputs input, UnitGravity unitGravity)
     {
-        _unitAnimations = unitAnimator;
+        _unitAnimations = animations;
         _input = input;
         _unitGravity = unitGravity;
     }
@@ -70,14 +71,15 @@ public class UnitMovement : MonoBehaviour
         float speedOffset = 0.1f;
         float inputMagnitude = _input.getAnalogMovement ? _input.getMove.magnitude : 1f;
 
+        ProcessMovement(targetSpeed, currentHorizontalSpeed, speedOffset, inputMagnitude);
+    }
+
+    private void ProcessMovement(float targetSpeed, float currentHorizontalSpeed, float speedOffset, float inputMagnitude)
+    {
         ApplyAcceleration(targetSpeed, currentHorizontalSpeed, speedOffset, inputMagnitude);
-
         CalculateAnimationBlend(targetSpeed);
-
         RotateTowardsInputDirection();
-
         MoveInTargetDirection();
-
         _unitAnimations.ApplyMovementAnimation(_animationBlend, inputMagnitude);
     }
 

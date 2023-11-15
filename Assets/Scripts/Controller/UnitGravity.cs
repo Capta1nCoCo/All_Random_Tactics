@@ -36,7 +36,7 @@ public class UnitGravity : MonoBehaviour
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
 
-    private UnitController _unitAnimations;
+    private UnitAnimations _unitAnimations;
     private UnitArmature _currentUnit;
     private ART_Inputs _input;
 
@@ -50,9 +50,9 @@ public class UnitGravity : MonoBehaviour
         _fallTimeoutDelta = FallTimeout;
     }
 
-    public void Init(UnitController unitAnimator, ART_Inputs input)
+    public void Init(UnitAnimations animations, ART_Inputs input)
     {
-        _unitAnimations = unitAnimator;
+        _unitAnimations = animations;
         _input = input;
     }
 

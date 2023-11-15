@@ -5,26 +5,17 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(ART_Inputs), typeof(PlayerInput), typeof(UnitSwitcher))]
 [RequireComponent(typeof(UnitGravity), typeof(UnitMovement), typeof(UnitCamera))]
+[RequireComponent(typeof(UnitAnimations))]
 public class UnitController : MonoBehaviour
 {
     [SerializeField] private UnitArmature _currentUnit;
 
-    // animation IDs
-    private int _animIDSpeed;
-    private int _animIDGrounded;
-    private int _animIDJump;
-    private int _animIDFreeFall;
-    private int _animIDMotionSpeed;
-
-    private bool _hasAnimator;
-
-    private Animator _animator;
     private ART_Inputs _input;
-
     private UnitSwitcher _unitSwitcher;
     private UnitGravity _unitGravity;
     private UnitMovement _unitMovement;
     private UnitCamera _unitCamera;
+    private UnitAnimations _unitAnimations;
 
     private void Awake()
     {
@@ -33,98 +24,45 @@ public class UnitController : MonoBehaviour
         _unitGravity = GetComponent<UnitGravity>();
         _unitMovement = GetComponent<UnitMovement>();
         _unitCamera = GetComponent<UnitCamera>();
+        _unitAnimations = GetComponent<UnitAnimations>();
     }
 
     private void Start()
     {
         _unitSwitcher.Init(_input, InitUnitArmature);
-        _unitGravity.Init(this, _input);
-        _unitMovement.Init(this, _input, _unitGravity);
+        _unitGravity.Init(_unitAnimations, _input);
+        _unitMovement.Init(_unitAnimations, _input, _unitGravity);
         _unitCamera.Init(_input);
         InitUnitArmature(_unitSwitcher.getNewUnitArmature);
-
-        AssignAnimationIDs();
     }
 
     private void InitUnitArmature(UnitArmature currentUnit)
+    {
+        DisablePrevUnit();
+        EnableCurrentUnit(currentUnit);
+        UpdateDependencies();
+    }
+
+    private void DisablePrevUnit()
     {
         if (_currentUnit != null)
         {
             _currentUnit.EnableUnitCamera(false);
         }
+    }
 
+    private void EnableCurrentUnit(UnitArmature currentUnit)
+    {
         _currentUnit = currentUnit;
-        _unitGravity.setCurrentUnit = currentUnit;
-        _unitMovement.setCurrentUnit = currentUnit;
         _currentUnit.EnableUnitCamera(true);
+    }
 
-        _unitCamera.UpdateCameraTarget(_currentUnit.getCameraRoot);
-        
-        _animator = _currentUnit.getAnimator;
-        _hasAnimator = _animator != null;
+    private void UpdateDependencies()
+    {
+        _unitGravity.setCurrentUnit = _currentUnit;
+        _unitMovement.setCurrentUnit = _currentUnit;
         _unitMovement.setController = _currentUnit.getController;
-    }
-
-    private void Update()
-    {
-        _hasAnimator = _animator != null;
-    }
-
-    private void AssignAnimationIDs()
-    {
-        _animIDSpeed = Animator.StringToHash("Speed");
-        _animIDGrounded = Animator.StringToHash("Grounded");
-        _animIDJump = Animator.StringToHash("Jump");
-        _animIDFreeFall = Animator.StringToHash("FreeFall");
-        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
-    }
-
-    // Animation Public Methods
-    // TODO: Encapsulate into a separate class
-    public void ApplyMovementAnimation(float animationBlend, float inputMagnitude)
-    {
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetFloat(_animIDSpeed, animationBlend);
-            _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-        }
-    }
-
-    public void ResetGravityBasedAnimations()
-    {
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetBool(_animIDJump, false);
-            _animator.SetBool(_animIDFreeFall, false);
-        }
-    }
-
-    public void ApplyJumpAnimation()
-    {
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetBool(_animIDJump, true);
-        }
-    }
-
-    public void ApplyFreeFallAnimation()
-    {
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetBool(_animIDFreeFall, true);
-        }
-    }
-
-    public void ApplyGroundedAnimation(bool Grounded)
-    {
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetBool(_animIDGrounded, Grounded);
-        }
+        _unitCamera.SetNewCameraTarget(_currentUnit.getCameraRoot);
+        _unitAnimations.SetNewAnimator(_currentUnit.getAnimator);
     }
 }

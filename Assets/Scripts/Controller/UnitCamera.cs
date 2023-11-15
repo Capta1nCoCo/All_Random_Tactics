@@ -56,7 +56,7 @@ public class UnitCamera : MonoBehaviour
         _input = input;
     }
 
-    public void UpdateCameraTarget(GameObject cinemachineCameraTarget)
+    public void SetNewCameraTarget(GameObject cinemachineCameraTarget)
     {
         _cinemachineCameraTarget = cinemachineCameraTarget;
         _cinemachineTargetYaw = _cinemachineCameraTarget.transform.rotation.eulerAngles.y;
