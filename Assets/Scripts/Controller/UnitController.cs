@@ -1,6 +1,7 @@
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using Zenject;
 #endif
 
 [RequireComponent(typeof(ART_Inputs), typeof(PlayerInput), typeof(UnitSwitcher))]
@@ -10,29 +11,30 @@ public class UnitController : MonoBehaviour
 {
     [SerializeField] private UnitArmature _currentUnit;
 
-    private ART_Inputs _input;
     private UnitSwitcher _unitSwitcher;
     private UnitGravity _unitGravity;
     private UnitMovement _unitMovement;
     private UnitCamera _unitCamera;
     private UnitAnimations _unitAnimations;
 
+    [Inject]
+    public void Init(UnitAnimations unitAnimations)
+    {
+        _unitAnimations = unitAnimations;
+    }
+
     private void Awake()
     {
-        _input = GetComponent<ART_Inputs>();
         _unitSwitcher = GetComponent<UnitSwitcher>();
         _unitGravity = GetComponent<UnitGravity>();
         _unitMovement = GetComponent<UnitMovement>();
         _unitCamera = GetComponent<UnitCamera>();
-        _unitAnimations = GetComponent<UnitAnimations>();
     }
 
     private void Start()
     {
-        _unitSwitcher.Init(_input, InitUnitArmature);
-        _unitGravity.Init(_unitAnimations, _input);
-        _unitMovement.Init(_unitAnimations, _input, _unitGravity);
-        _unitCamera.Init(_input);
+        _unitSwitcher.Init(InitUnitArmature);
+        _unitMovement.Init(_unitGravity);
         InitUnitArmature(_unitSwitcher.getNewUnitArmature);
     }
 

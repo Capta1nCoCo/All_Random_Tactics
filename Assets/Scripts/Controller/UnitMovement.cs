@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class UnitMovement : MonoBehaviour
 {
@@ -34,6 +35,13 @@ public class UnitMovement : MonoBehaviour
     public CharacterController setController { set { _controller = value; } }
     public UnitArmature setCurrentUnit { set { _currentUnit = value; } }
 
+    [Inject]
+    public void InjectDependencies(UnitAnimations animations, ART_Inputs input)
+    {
+        _unitAnimations = animations;
+        _input = input;
+    }
+
     private void Awake()
     {
         // get a reference to our main camera
@@ -43,10 +51,8 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void Init(UnitAnimations animations, ART_Inputs input, UnitGravity unitGravity)
+    public void Init(UnitGravity unitGravity)
     {
-        _unitAnimations = animations;
-        _input = input;
         _unitGravity = unitGravity;
     }
 

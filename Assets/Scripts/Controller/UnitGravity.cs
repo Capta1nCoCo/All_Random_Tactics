@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class UnitGravity : MonoBehaviour
 {
@@ -43,17 +44,18 @@ public class UnitGravity : MonoBehaviour
     public float getVerticalVelocity { get { return _verticalVelocity; } }
     public UnitArmature setCurrentUnit { set { _currentUnit = value; } }
 
+    [Inject]
+    public void Init(UnitAnimations animations, ART_Inputs input)
+    {
+        _unitAnimations = animations;
+        _input = input;
+    }
+
     private void Start()
     {
         // reset our timeouts on start
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
-    }
-
-    public void Init(UnitAnimations animations, ART_Inputs input)
-    {
-        _unitAnimations = animations;
-        _input = input;
     }
 
     private void Update()

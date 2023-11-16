@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class UnitSwitcher : MonoBehaviour
 {
@@ -11,13 +12,19 @@ public class UnitSwitcher : MonoBehaviour
     public delegate void InitUnitMethod(UnitArmature newUnitArmature);
 
     private InitUnitMethod InitNewUnit;
+
     private ART_Inputs _inputs;
 
     public UnitArmature getNewUnitArmature { get { return _newUnitArmature; } }
 
-    public void Init(ART_Inputs inputs, InitUnitMethod InitUnitArmature)
+    [Inject]
+    public void InjectDependencies(ART_Inputs inputs)
     {
         _inputs = inputs;
+    }
+
+    public void Init(InitUnitMethod InitUnitArmature)
+    {
         InitNewUnit = InitUnitArmature;
         _newUnitArmature = _unitArmatures[_currentUnitIndex];
     }

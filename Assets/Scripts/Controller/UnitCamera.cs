@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 public class UnitCamera : MonoBehaviour
 {
@@ -42,6 +43,12 @@ public class UnitCamera : MonoBehaviour
         }
     }
 
+    [Inject]
+    public void Init(ART_Inputs input)
+    {
+        _input = input;
+    }
+
     private void Awake()
     {
 #if ENABLE_INPUT_SYSTEM
@@ -49,11 +56,6 @@ public class UnitCamera : MonoBehaviour
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
-    }
-
-    public void Init(ART_Inputs input)
-    {
-        _input = input;
     }
 
     public void SetNewCameraTarget(GameObject cinemachineCameraTarget)
