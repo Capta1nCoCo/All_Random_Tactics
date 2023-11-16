@@ -10,8 +10,9 @@ public class ART_Inputs : MonoBehaviour
     [SerializeField] private Vector2 look;
     [SerializeField] private bool jump;
     [SerializeField] private bool sprint;
-    [SerializeField] private bool nextUnit;
-    [SerializeField] private bool prevUnit;
+
+    private bool nextUnit;
+    private bool prevUnit;
 
     [Header("Movement Settings")]
     [SerializeField] private bool analogMovement;

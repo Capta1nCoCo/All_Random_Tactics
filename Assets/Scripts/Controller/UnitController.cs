@@ -1,10 +1,9 @@
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
 using Zenject;
 #endif
 
-[RequireComponent(typeof(ART_Inputs), typeof(PlayerInput), typeof(UnitSwitcher))]
+[RequireComponent(typeof(UnitSwitcher))]
 [RequireComponent(typeof(UnitGravity), typeof(UnitMovement), typeof(UnitCamera))]
 [RequireComponent(typeof(UnitAnimations))]
 public class UnitController : MonoBehaviour
