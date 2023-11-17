@@ -60,7 +60,16 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
 
     public void SetCurrentUnit(UnitArmature unit)
     {
+        ResetPrevUnitGravityAnimations();
         _currentUnit = unit;
+    }
+
+    private void ResetPrevUnitGravityAnimations()
+    {
+        if (_currentUnit != null)
+        {
+            _unitAnimations.ResetGravityBasedAnimations();
+        }
     }
 
     private void Update()
