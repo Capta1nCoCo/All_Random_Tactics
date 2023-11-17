@@ -30,6 +30,7 @@ public class UnitCamera : MonoBehaviour, ICurrentUnitUser
     private PlayerInput _playerInput;
 #endif
     private ART_Inputs _input;
+    private UnitArmature _currentUnit;
 
     private bool IsCurrentDeviceMouse
     {
@@ -52,7 +53,18 @@ public class UnitCamera : MonoBehaviour, ICurrentUnitUser
 
     public void SetCurrentUnit(UnitArmature unit)
     {
-        SetNewCameraTarget(unit.getCameraRoot);
+        DisablePrevUnitCamera();
+        _currentUnit = unit;
+        _currentUnit.EnableUnitCamera(true);
+        SetNewCameraTarget(_currentUnit.getCameraRoot);
+    }
+
+    private void DisablePrevUnitCamera()
+    {
+        if (_currentUnit != null)
+        {
+            _currentUnit.EnableUnitCamera(false);
+        }
     }
 
     private void SetNewCameraTarget(GameObject cinemachineCameraTarget)

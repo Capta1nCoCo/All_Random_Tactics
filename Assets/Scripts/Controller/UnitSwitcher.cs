@@ -12,11 +12,13 @@ public class UnitSwitcher : MonoBehaviour
     private InitUnitMethod InitNewUnit;
 
     private ART_Inputs _inputs;
+    private UnitGravity _unitGravity;
 
     [Inject]
-    public void InjectDependencies(ART_Inputs inputs)
+    public void InjectDependencies(ART_Inputs inputs, UnitGravity unitGravity)
     {
         _inputs = inputs;
+        _unitGravity = unitGravity;
     }
 
     public void RequestInitialUnit(InitUnitMethod InitUnitArmature)
@@ -27,7 +29,10 @@ public class UnitSwitcher : MonoBehaviour
 
     private void Update()
     {
-        SwitchUnit();
+        if (_unitGravity.getGrounded)
+        {
+            SwitchUnit();
+        }
     }
 
     public void SwitchUnit()

@@ -23,23 +23,13 @@ public class UnitController : MonoBehaviour
 
     private void InitUnitArmature(UnitArmature currentUnit)
     {
-        DisablePrevUnitCamera();
         EnableCurrentUnit(currentUnit);
         UpdateCurrentUnitUsers();
-    }
-
-    private void DisablePrevUnitCamera()
-    {
-        if (_currentUnit != null)
-        {
-            _currentUnit.EnableUnitCamera(false);
-        }
     }
 
     private void EnableCurrentUnit(UnitArmature currentUnit)
     {
         _currentUnit = currentUnit;
-        _currentUnit.EnableUnitCamera(true);
     }
 
     private void UpdateCurrentUnitUsers()

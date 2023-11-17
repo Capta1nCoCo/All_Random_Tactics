@@ -41,6 +41,7 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     private UnitArmature _currentUnit;
     private ART_Inputs _input;
 
+    public bool getGrounded { get { return Grounded; } }
     public float getVerticalVelocity { get { return _verticalVelocity; } }
 
     [Inject]

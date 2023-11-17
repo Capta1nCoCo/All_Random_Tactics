@@ -51,8 +51,17 @@ public class UnitMovement : MonoBehaviour, ICurrentUnitUser
 
     public void SetCurrentUnit(UnitArmature unit)
     {
+        StopPrevUnitMovementAnimation();
         _currentUnit = unit;
         _controller = _currentUnit.getController;
+    }
+
+    private void StopPrevUnitMovementAnimation()
+    {
+        if (_currentUnit != null)
+        {
+            _unitAnimations.ApplyMovementAnimation(0, 0);
+        }
     }
 
     private void Update()
