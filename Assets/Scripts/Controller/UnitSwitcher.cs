@@ -23,7 +23,7 @@ public class UnitSwitcher : MonoBehaviour
         _inputs = inputs;
     }
 
-    public void Init(InitUnitMethod InitUnitArmature)
+    public void GetInitialUnit(InitUnitMethod InitUnitArmature)
     {
         InitNewUnit = InitUnitArmature;
         _newUnitArmature = _unitArmatures[_currentUnitIndex];

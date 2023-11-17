@@ -45,7 +45,7 @@ public class UnitGravity : MonoBehaviour
     public UnitArmature setCurrentUnit { set { _currentUnit = value; } }
 
     [Inject]
-    public void Init(UnitAnimations animations, ART_Inputs input)
+    public void InjectDependencies(UnitAnimations animations, ART_Inputs input)
     {
         _unitAnimations = animations;
         _input = input;

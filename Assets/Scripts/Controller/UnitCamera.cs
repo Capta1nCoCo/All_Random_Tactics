@@ -44,7 +44,7 @@ public class UnitCamera : MonoBehaviour
     }
 
     [Inject]
-    public void Init(ART_Inputs inputs, PlayerInput playerInput)
+    public void InjectDependencies(ART_Inputs inputs, PlayerInput playerInput)
     {
         _input = inputs;
         _playerInput = playerInput;

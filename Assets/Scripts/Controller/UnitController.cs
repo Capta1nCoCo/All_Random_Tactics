@@ -3,9 +3,8 @@ using UnityEngine;
 using Zenject;
 #endif
 
-[RequireComponent(typeof(UnitSwitcher))]
-[RequireComponent(typeof(UnitGravity), typeof(UnitMovement), typeof(UnitCamera))]
-[RequireComponent(typeof(UnitAnimations))]
+[RequireComponent(typeof(UnitSwitcher), typeof(UnitAnimations), typeof(UnitCamera))]
+[RequireComponent(typeof(UnitGravity), typeof(UnitMovement))]
 public class UnitController : MonoBehaviour
 {
     [SerializeField] private UnitArmature _currentUnit;
@@ -17,23 +16,22 @@ public class UnitController : MonoBehaviour
     private UnitAnimations _unitAnimations;
 
     [Inject]
-    public void Init(UnitAnimations unitAnimations)
+    public void InjectDependencies(UnitAnimations unitAnimations, UnitGravity unitGravity)
     {
         _unitAnimations = unitAnimations;
+        _unitGravity = unitGravity;
     }
 
     private void Awake()
     {
         _unitSwitcher = GetComponent<UnitSwitcher>();
-        _unitGravity = GetComponent<UnitGravity>();
         _unitMovement = GetComponent<UnitMovement>();
         _unitCamera = GetComponent<UnitCamera>();
     }
 
     private void Start()
     {
-        _unitSwitcher.Init(InitUnitArmature);
-        _unitMovement.Init(_unitGravity);
+        _unitSwitcher.GetInitialUnit(InitUnitArmature);
         InitUnitArmature(_unitSwitcher.getNewUnitArmature);
     }
 

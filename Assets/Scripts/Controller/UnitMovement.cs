@@ -36,10 +36,11 @@ public class UnitMovement : MonoBehaviour
     public UnitArmature setCurrentUnit { set { _currentUnit = value; } }
 
     [Inject]
-    public void InjectDependencies(UnitAnimations animations, ART_Inputs input)
+    public void InjectDependencies(UnitAnimations animations, ART_Inputs input, UnitGravity unitGravity)
     {
         _unitAnimations = animations;
         _input = input;
+        _unitGravity = unitGravity;
     }
 
     private void Awake()
@@ -49,11 +50,6 @@ public class UnitMovement : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
-    }
-
-    public void Init(UnitGravity unitGravity)
-    {
-        _unitGravity = unitGravity;
     }
 
     private void Update()
