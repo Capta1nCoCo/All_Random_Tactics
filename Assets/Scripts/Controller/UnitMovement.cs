@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-public class UnitMovement : MonoBehaviour
+public class UnitMovement : MonoBehaviour, ICurrentUnitUser
 {
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -32,9 +32,6 @@ public class UnitMovement : MonoBehaviour
     private CharacterController _controller;
     private UnitArmature _currentUnit;
 
-    public CharacterController setController { set { _controller = value; } }
-    public UnitArmature setCurrentUnit { set { _currentUnit = value; } }
-
     [Inject]
     public void InjectDependencies(UnitAnimations animations, ART_Inputs input, UnitGravity unitGravity)
     {
@@ -50,6 +47,12 @@ public class UnitMovement : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
+    }
+
+    public void SetCurrentUnit(UnitArmature unit)
+    {
+        _currentUnit = unit;
+        _controller = _currentUnit.getController;
     }
 
     private void Update()

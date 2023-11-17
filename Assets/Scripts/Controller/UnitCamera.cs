@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-public class UnitCamera : MonoBehaviour
+public class UnitCamera : MonoBehaviour, ICurrentUnitUser
 {
     [Header("Cinemachine")]
     [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
@@ -50,7 +50,12 @@ public class UnitCamera : MonoBehaviour
         _playerInput = playerInput;
     }
 
-    public void SetNewCameraTarget(GameObject cinemachineCameraTarget)
+    public void SetCurrentUnit(UnitArmature unit)
+    {
+        SetNewCameraTarget(unit.getCameraRoot);
+    }
+
+    private void SetNewCameraTarget(GameObject cinemachineCameraTarget)
     {
         _cinemachineCameraTarget = cinemachineCameraTarget;
         _cinemachineTargetYaw = _cinemachineCameraTarget.transform.rotation.eulerAngles.y;

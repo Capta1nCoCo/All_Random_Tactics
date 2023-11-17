@@ -5,8 +5,6 @@ public class UnitSwitcher : MonoBehaviour
 {
     [SerializeField] private UnitArmature[] _unitArmatures;
 
-    private UnitArmature _newUnitArmature;
-
     private int _currentUnitIndex = 0;
 
     public delegate void InitUnitMethod(UnitArmature newUnitArmature);
@@ -15,18 +13,16 @@ public class UnitSwitcher : MonoBehaviour
 
     private ART_Inputs _inputs;
 
-    public UnitArmature getNewUnitArmature { get { return _newUnitArmature; } }
-
     [Inject]
     public void InjectDependencies(ART_Inputs inputs)
     {
         _inputs = inputs;
     }
 
-    public void GetInitialUnit(InitUnitMethod InitUnitArmature)
+    public void RequestInitialUnit(InitUnitMethod InitUnitArmature)
     {
         InitNewUnit = InitUnitArmature;
-        _newUnitArmature = _unitArmatures[_currentUnitIndex];
+        InitNewUnit(_unitArmatures[_currentUnitIndex]);
     }
 
     private void Update()

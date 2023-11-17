@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class UnitAnimations : MonoBehaviour
+public class UnitAnimations : MonoBehaviour, ICurrentUnitUser
 {
-    // animation IDs
     private int _animIDSpeed;
     private int _animIDGrounded;
     private int _animIDJump;
@@ -27,7 +26,12 @@ public class UnitAnimations : MonoBehaviour
         _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
     }
 
-    public void SetNewAnimator(Animator animator)
+    public void SetCurrentUnit(UnitArmature unit)
+    {
+        SetNewAnimator(unit.getAnimator);
+    }
+
+    private void SetNewAnimator(Animator animator)
     {
         _animator = animator;
         _hasAnimator = _animator != null;

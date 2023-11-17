@@ -1,7 +1,4 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM
-using Zenject;
-#endif
 
 [RequireComponent(typeof(UnitSwitcher), typeof(UnitAnimations), typeof(UnitCamera))]
 [RequireComponent(typeof(UnitGravity), typeof(UnitMovement))]
@@ -10,39 +7,28 @@ public class UnitController : MonoBehaviour
     [SerializeField] private UnitArmature _currentUnit;
 
     private UnitSwitcher _unitSwitcher;
-    private UnitGravity _unitGravity;
-    private UnitMovement _unitMovement;
-    private UnitCamera _unitCamera;
-    private UnitAnimations _unitAnimations;
 
-    [Inject]
-    public void InjectDependencies(UnitAnimations unitAnimations, UnitGravity unitGravity)
-    {
-        _unitAnimations = unitAnimations;
-        _unitGravity = unitGravity;
-    }
+    private ICurrentUnitUser[] _currentUnitUsers;
 
     private void Awake()
     {
         _unitSwitcher = GetComponent<UnitSwitcher>();
-        _unitMovement = GetComponent<UnitMovement>();
-        _unitCamera = GetComponent<UnitCamera>();
+        _currentUnitUsers = GetComponents<ICurrentUnitUser>();
     }
 
     private void Start()
     {
-        _unitSwitcher.GetInitialUnit(InitUnitArmature);
-        InitUnitArmature(_unitSwitcher.getNewUnitArmature);
+        _unitSwitcher.RequestInitialUnit(InitUnitArmature);
     }
 
     private void InitUnitArmature(UnitArmature currentUnit)
     {
-        DisablePrevUnit();
+        DisablePrevUnitCamera();
         EnableCurrentUnit(currentUnit);
-        UpdateDependencies();
+        UpdateCurrentUnitUsers();
     }
 
-    private void DisablePrevUnit()
+    private void DisablePrevUnitCamera()
     {
         if (_currentUnit != null)
         {
@@ -56,12 +42,11 @@ public class UnitController : MonoBehaviour
         _currentUnit.EnableUnitCamera(true);
     }
 
-    private void UpdateDependencies()
+    private void UpdateCurrentUnitUsers()
     {
-        _unitGravity.setCurrentUnit = _currentUnit;
-        _unitMovement.setCurrentUnit = _currentUnit;
-        _unitMovement.setController = _currentUnit.getController;
-        _unitCamera.SetNewCameraTarget(_currentUnit.getCameraRoot);
-        _unitAnimations.SetNewAnimator(_currentUnit.getAnimator);
+        for (int i = 0; i < _currentUnitUsers.Length; i++)
+        {
+            _currentUnitUsers[i].SetCurrentUnit(_currentUnit);
+        }
     }
 }
