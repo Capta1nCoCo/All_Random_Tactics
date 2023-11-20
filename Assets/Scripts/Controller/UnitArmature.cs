@@ -12,15 +12,18 @@ public class UnitArmature : MonoBehaviour
 
     private Animator _animator;
     private CharacterController _controller;
+    private UnitSpecificAnimations _unitSpecificAnimations;
 
     public GameObject getCameraRoot { get { return _unitCameraRoot; } }
     public Animator getAnimator { get { return _animator; } }
     public CharacterController getController { get { return _controller; } }
+    public UnitSpecificAnimations getUnitSpecificAnimations { get {  return _unitSpecificAnimations; } }
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController>();
+        _unitSpecificAnimations = GetComponent<UnitSpecificAnimations>();
         _unitCamera.SetActive(false);
     }
 
