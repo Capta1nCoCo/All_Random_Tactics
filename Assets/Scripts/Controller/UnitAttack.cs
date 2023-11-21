@@ -28,9 +28,21 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
         {
             if (_inputs.getLightAttack)
             {
-                _inputs.setLightAttack = false;
-                _animations.ApplyLightAttackAnimation();
+                ProcessLightAttack();
             }
+        }
+        else
+        {
+            _inputs.setLightAttack = false;
+        }
+    }
+
+    private void ProcessLightAttack()
+    {
+        _inputs.setLightAttack = false;
+        if (!_animations.getInAnimation || _animations.getIsOpportunityWindow)
+        {
+            _animations.ApplyLightAttackAnimation();
         }
     }
 }
