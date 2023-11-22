@@ -73,6 +73,21 @@ public class UnitCamera : MonoBehaviour, ICurrentUnitUser
         _cinemachineTargetYaw = _cinemachineCameraTarget.transform.rotation.eulerAngles.y;
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnLockOn += OnLockOn;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLockOn -= OnLockOn;
+    }
+
+    private void OnLockOn(bool locked)
+    {
+        LockCameraPosition = locked;
+    }
+
     private void LateUpdate()
     {
         CameraRotation();

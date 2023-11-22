@@ -4,5 +4,6 @@ public static class Constants
     {
         public const int Ground = 6;
         public const int Character = 7;
+        public const int Enemy = 8;
     }
 }
