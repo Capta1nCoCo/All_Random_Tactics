@@ -2,9 +2,11 @@
 
 public class BasicRigidBodyPush : MonoBehaviour
 {
-	public LayerMask pushLayers;
-	public bool canPush;
-	[Range(0.5f, 5f)] public float strength = 1.1f;
+	[SerializeField] private LayerMask pushLayers;
+	[SerializeField] private bool canPush;
+	[SerializeField] [Range(0.5f, 5f)] private float strength = .55f;
+
+	public bool setCanPush { set { canPush = value; } }
 
 	private void OnControllerColliderHit(ControllerColliderHit hit)
 	{

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController), typeof(Animator))]
@@ -10,6 +11,8 @@ public class UnitArmature : MonoBehaviour
     [SerializeField] private AudioClip[] FootstepAudioClips;
     [SerializeField] [Range(0, 1)] private float FootstepAudioVolume = 0.5f;
 
+    [SerializeField] private List<Transform> _avaliableTargets = new List<Transform>();
+
     private Animator _animator;
     private CharacterController _controller;
     private UnitSpecificAnimations _unitSpecificAnimations;
@@ -18,6 +21,7 @@ public class UnitArmature : MonoBehaviour
     public Animator getAnimator { get { return _animator; } }
     public CharacterController getController { get { return _controller; } }
     public UnitSpecificAnimations getUnitSpecificAnimations { get {  return _unitSpecificAnimations; } }
+    public List<Transform> getAvaliableTargets { get { return _avaliableTargets; } }
 
     private void Awake()
     {
