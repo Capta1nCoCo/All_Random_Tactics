@@ -7,6 +7,8 @@ public class UnitSwitcher : MonoBehaviour
 
     private int _currentUnitIndex = 0;
 
+    private bool _lockSwitching;
+
     public delegate void InitUnitMethod(UnitArmature newUnitArmature);
 
     private InitUnitMethod InitNewUnit;
@@ -27,11 +29,31 @@ public class UnitSwitcher : MonoBehaviour
         InitNewUnit(_unitArmatures[_currentUnitIndex]);
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnLockOn += OnLockOn;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLockOn -= OnLockOn;
+    }
+
+    private void OnLockOn(bool locked)
+    {
+        _lockSwitching = locked;
+    }
+
     private void Update()
     {
-        if (_unitGravity.getGrounded)
+        if (_unitGravity.getGrounded && !_lockSwitching)
         {
             SwitchUnit();
+        }
+        else if (_inputs.getNextUnit || _inputs.getPrevUnit)
+        {
+            _inputs.setNextUnit = false;
+            _inputs.setPrevUnit = false;
         }
     }
 

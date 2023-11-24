@@ -14,11 +14,13 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
     private int _currentTargetIndex;
 
     private ART_Inputs _inputs;
+    private UnitGravity _gravity;
 
     [Inject]
-    public void InjectDependencies(ART_Inputs inputs)
+    public void InjectDependencies(ART_Inputs inputs, UnitGravity gravity)
     {
         _inputs = inputs;
+        _gravity = gravity;
     }
 
     public void SetCurrentUnit(UnitArmature unit)
@@ -38,14 +40,15 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
         if (_inputs.getLockOn)
         {
             _inputs.setLockOn = false;
-            LockOnAvaliableTarget();
+            if (_gravity.getGrounded)
+            {
+                LockOnAvaliableTarget();
+            }
         }
         else if (_inputs.getEsc && _lockOnCamera.gameObject.activeSelf)
         {
             _inputs.setEsc = false;
-            LookAt(null);
-            _currentTargetIndex = 0;
-            Debug.Log("Lock-on: Released");
+            ReleaseLockOn();
         }
     }
 
@@ -84,5 +87,12 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
             Vector3 targetPosition = new Vector3(target.position.x, _unitTransform.position.y, target.position.z);
             _unitTransform.LookAt(targetPosition);
         }
+    }
+
+    private void ReleaseLockOn()
+    {
+        LookAt(null);
+        _currentTargetIndex = 0;
+        Debug.Log("Lock-on: Released");
     }
 }
