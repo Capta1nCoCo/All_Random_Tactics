@@ -11,23 +11,26 @@ public class UnitArmature : MonoBehaviour
     [SerializeField] private AudioClip[] FootstepAudioClips;
     [SerializeField] [Range(0, 1)] private float FootstepAudioVolume = 0.5f;
 
-    [SerializeField] private List<Transform> _avaliableTargets = new List<Transform>();
+    private List<Transform> _avaliableTargets = new List<Transform>();
 
     private Animator _animator;
     private CharacterController _controller;
     private UnitSpecificAnimations _unitSpecificAnimations;
+    [SerializeField] private TargetFinder _targetFinder;
 
     public GameObject getCameraRoot { get { return _unitCameraRoot; } }
     public Animator getAnimator { get { return _animator; } }
     public CharacterController getController { get { return _controller; } }
     public UnitSpecificAnimations getUnitSpecificAnimations { get {  return _unitSpecificAnimations; } }
     public List<Transform> getAvaliableTargets { get { return _avaliableTargets; } }
+    public TargetFinder getTargetFinder { get { return _targetFinder; } }
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController>();
         _unitSpecificAnimations = GetComponent<UnitSpecificAnimations>();
+        //_targetFinder = GetComponentInChildren<TargetFinder>();
         _unitCamera.SetActive(false);
     }
 

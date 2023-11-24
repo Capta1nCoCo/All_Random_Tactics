@@ -81,5 +81,6 @@ public class UnitSpecificAnimations : MonoBehaviour
         _inAnimation = false;
         _animator.applyRootMotion = _inAnimation;
         _bodyPush.setCanPush = _inAnimation;
+        _lockOnSystem.ReleaseCurrentTarget();
     }
 }

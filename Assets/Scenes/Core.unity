@@ -254,7 +254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &266148459
 Transform:
   m_ObjectHideFlags: 0
@@ -2291,6 +2291,18 @@ MonoBehaviour:
   _unitTransform: {fileID: 0}
   _avaliableTargets: []
   _currentTarget: {fileID: 0}
+--- !u!114 &2122039183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122039154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cb904796f5a7945adde4a22ae42480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &529024914096089922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2409,6 +2421,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a3194b8bbc96ef84fab1f98f4b7dae3e, type: 3}
   FootstepAudioVolume: 0.5
   _avaliableTargets: []
+  _targetFinder: {fileID: 266148463}
 --- !u!114 &1636428672163289082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3029,6 +3042,10 @@ PrefabInstance:
         type: 3}
       insertIndex: 9
       addedObject: {fileID: 2122039174}
+    - targetCorrespondingSourceObject: {fileID: 986740494180475046, guid: 6480bfb7c01d1c84789f0adf47f4c7ac,
+        type: 3}
+      insertIndex: 10
+      addedObject: {fileID: 2122039183}
   m_SourcePrefab: {fileID: 100100000, guid: 6480bfb7c01d1c84789f0adf47f4c7ac, type: 3}
 --- !u!4 &9165670878697951626
 Transform:

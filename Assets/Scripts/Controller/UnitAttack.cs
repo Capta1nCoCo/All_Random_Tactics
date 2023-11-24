@@ -5,6 +5,9 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
 {
     private ART_Inputs _inputs;
     private UnitSpecificAnimations _animations;
+    private TargetFinder _unitTargetFinder;
+
+    private bool _hasTarget;
 
     [Inject]
     public void InjectDependencies(ART_Inputs inputs)
@@ -15,6 +18,22 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
     public void SetCurrentUnit(UnitArmature unit)
     {
         _animations = unit.getUnitSpecificAnimations;
+        _unitTargetFinder = unit.getTargetFinder;
+    }
+
+    private void OnEnable()
+    {
+        GameEvents.OnLockOn += OnLockOn;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLockOn -= OnLockOn;
+    }
+
+    private void OnLockOn(bool locked)
+    {
+        _hasTarget = locked;
     }
 
     private void Update()
@@ -28,18 +47,30 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
         {
             if (_inputs.getLightAttack)
             {
-                ProcessLightAttack();
+                _inputs.setLightAttack = false;
+                if (_hasTarget)
+                {
+                    DisableTargetFinder();
+                    ProcessLightAttack();
+                }
             }
         }
-        else
+        else if (_inputs.getLightAttack)
         {
             _inputs.setLightAttack = false;
         }
     }
 
+    private void DisableTargetFinder()
+    {
+        if (_unitTargetFinder != null)
+        {
+            _unitTargetFinder.gameObject.SetActive(false);
+        }
+    }
+
     private void ProcessLightAttack()
     {
-        _inputs.setLightAttack = false;
         if (!_animations.getInAnimation || _animations.getIsOpportunityWindow)
         {
             _animations.ApplyLightAttackAnimation();

@@ -6,10 +6,10 @@ using Zenject;
 public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
 {
     [SerializeField] private CinemachineVirtualCamera _lockOnCamera;
-    [SerializeField] private Transform _unitTransform;
 
-    [SerializeField] private List<Transform> _avaliableTargets;
-    [SerializeField] private Transform _currentTarget;
+    private Transform _unitTransform;
+    private List<Transform> _avaliableTargets;
+    private Transform _currentTarget;
 
     private int _currentTargetIndex;
 
@@ -33,6 +33,11 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
     public void LockOnCurrentTarget()
     {
         LockOn(_currentTarget);
+    }
+
+    public void ReleaseCurrentTarget()
+    {
+        ReleaseLockOn();
     }
 
     private void Update()
