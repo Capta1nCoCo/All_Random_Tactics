@@ -13,6 +13,9 @@ public class ART_Inputs : MonoBehaviour
 
     private bool nextUnit;
     private bool prevUnit;
+    private bool lightAttack;
+    private bool lockOn;
+    private bool esc;
 
     [Header("Movement Settings")]
     [SerializeField] private bool analogMovement;
@@ -25,13 +28,19 @@ public class ART_Inputs : MonoBehaviour
     public Vector2 getLook { get { return look; } }
     public bool getJump { get { return jump; } }
     public bool getSprint { get { return sprint; } }
+    public bool getAnalogMovement { get { return analogMovement; } }
     public bool getNextUnit { get { return nextUnit; } }
     public bool getPrevUnit { get { return prevUnit; } }
-    public bool getAnalogMovement { get { return analogMovement; } }
+    public bool getLightAttack { get { return lightAttack; } }
+    public bool getLockOn { get { return lockOn; } }
+    public bool getEsc { get { return esc; } }
 
     public bool setJump { set { jump = value; } }
     public bool setNextUnit { set { nextUnit = value; } }
     public bool setPrevUnit { set { prevUnit = value; } }
+    public bool setLightAttack { set { lightAttack = value; } }
+    public bool setLockOn { set {  lockOn = value; } }
+    public bool setEsc { set {  esc = value; } }
 
 #if ENABLE_INPUT_SYSTEM
     public void OnMove(InputValue value)
@@ -66,6 +75,21 @@ public class ART_Inputs : MonoBehaviour
     {
         PrevUnitInput(value.isPressed);
     }
+
+    public void OnLightAttack(InputValue value)
+    {
+        LightAttackInput(value.isPressed);
+    }
+
+    public void OnLockOn(InputValue value)
+    {
+        LockOnInput(value.isPressed);
+    }
+
+    public void OnEsc(InputValue value)
+    {
+        EscInput(value.isPressed);
+    }
 #endif
 
 
@@ -97,6 +121,21 @@ public class ART_Inputs : MonoBehaviour
     private void PrevUnitInput(bool newPrevUnitState)
     {
         prevUnit = newPrevUnitState;
+    }
+
+    private void LightAttackInput(bool newLightAttackState)
+    {
+        lightAttack = newLightAttackState;
+    }
+
+    private void LockOnInput(bool newLockOnInput)
+    {
+        lockOn = newLockOnInput;
+    }
+
+    private void EscInput(bool newEscInput)
+    {
+        esc = newEscInput;
     }
 
     private void OnApplicationFocus(bool hasFocus)

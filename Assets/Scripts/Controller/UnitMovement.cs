@@ -23,6 +23,8 @@ public class UnitMovement : MonoBehaviour, ICurrentUnitUser
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
 
+    private bool _lockMovement;
+
     private ART_Inputs _input;
     private UnitAnimations _unitAnimations;
 
@@ -64,9 +66,27 @@ public class UnitMovement : MonoBehaviour, ICurrentUnitUser
         }
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnLockOn += OnLockOn;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLockOn -= OnLockOn;
+    }
+
+    private void OnLockOn(bool locked)
+    {
+        _lockMovement = locked;
+    }
+
     private void Update()
     {
-        Move();
+        if (!_lockMovement)
+        {
+            Move();
+        }
     }
 
     private void Move()

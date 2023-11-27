@@ -37,6 +37,8 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
 
+    private bool _lockJumping;
+
     private UnitAnimations _unitAnimations;
     private UnitArmature _currentUnit;
     private ART_Inputs _input;
@@ -72,6 +74,21 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
         }
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnLockOn += OnLockOn;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnLockOn -= OnLockOn;
+    }
+
+    private void OnLockOn(bool locked)
+    {
+        _lockJumping = locked;
+    }
+
     private void Update()
     {
         JumpAndGravity();
@@ -82,7 +99,7 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     {
         if (Grounded)
         {
-            PocessJumping();
+            PocessGravity();
         }
         else
         {
@@ -92,7 +109,7 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
         ApplyGravityOverTime();
     }
 
-    private void PocessJumping()
+    private void PocessGravity()
     {
         ResetFallTimeoutTimer();
         _unitAnimations.ResetGravityBasedAnimations();
@@ -118,11 +135,20 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
 
     private void Jump()
     {
+        LockJumping();
         // Jump
         if (_input.getJump && _jumpTimeoutDelta <= 0.0f)
         {
             CalculateJumpVelocity();
             _unitAnimations.ApplyJumpAnimation();
+        }
+    }
+
+    private void LockJumping()
+    {
+        if (_input.getJump && _lockJumping)
+        {
+            _input.setJump = false;
         }
     }
 
