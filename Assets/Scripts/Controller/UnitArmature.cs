@@ -6,6 +6,7 @@ public class UnitArmature : MonoBehaviour
 {
     [SerializeField] private GameObject _unitCameraRoot;
     [SerializeField] private GameObject _unitCamera;
+    [SerializeField] private TargetFinder _targetFinder;
 
     [SerializeField] private AudioClip LandingAudioClip;
     [SerializeField] private AudioClip[] FootstepAudioClips;
@@ -16,7 +17,6 @@ public class UnitArmature : MonoBehaviour
     private Animator _animator;
     private CharacterController _controller;
     private UnitSpecificAnimations _unitSpecificAnimations;
-    [SerializeField] private TargetFinder _targetFinder;
 
     public GameObject getCameraRoot { get { return _unitCameraRoot; } }
     public Animator getAnimator { get { return _animator; } }
@@ -30,8 +30,11 @@ public class UnitArmature : MonoBehaviour
         _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController>();
         _unitSpecificAnimations = GetComponent<UnitSpecificAnimations>();
-        //_targetFinder = GetComponentInChildren<TargetFinder>();
         _unitCamera.SetActive(false);
+        if (_targetFinder != null)
+        {
+            _targetFinder.Init(this);
+        }
     }
 
     public void EnableUnitCamera(bool value)

@@ -17,7 +17,6 @@ public class UnitMovement : MonoBehaviour, ICurrentUnitUser
     [Tooltip("Acceleration and deceleration")]
     [SerializeField] private float SpeedChangeRate = 10.0f;
 
-    // player
     private float _speed;
     private float _animationBlend;
     private float _targetRotation = 0.0f;
@@ -44,7 +43,6 @@ public class UnitMovement : MonoBehaviour, ICurrentUnitUser
 
     private void Awake()
     {
-        // get a reference to our main camera
         if (_mainCamera == null)
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
@@ -165,8 +163,6 @@ public class UnitMovement : MonoBehaviour, ICurrentUnitUser
     private void MoveInTargetDirection()
     {
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-
-        // move the player
         _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                          new Vector3(0.0f, _unitGravity.getVerticalVelocity, 0.0f) * Time.deltaTime);
     }

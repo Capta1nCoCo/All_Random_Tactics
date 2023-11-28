@@ -3,6 +3,8 @@ using Zenject;
 
 public class UnitAbilityActivator : MonoBehaviour, ICurrentUnitUser
 {
+    [SerializeField] private float _abilityRadius = 2f;
+
     private TargetFinder _unitTargetFinder;
 
     private ART_Inputs _inputs;
@@ -26,7 +28,7 @@ public class UnitAbilityActivator : MonoBehaviour, ICurrentUnitUser
             if (_inputs.getEsc && !_unitTargetFinder.gameObject.activeSelf)
             {
                 _inputs.setEsc = false;
-                FindTargetsInRadius(2f);
+                FindTargetsInRadius(_abilityRadius);
             }
         }
     }

@@ -43,22 +43,29 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
 
     private void Attack()
     {
-        if (_animations != null)
+        if (_animations != null && _inputs.getLightAttack)
         {
-            if (_inputs.getLightAttack)
-            {
-                _inputs.setLightAttack = false;
-                if (_hasTarget)
-                {
-                    DisableTargetFinder();
-                    ProcessLightAttack();
-                }
-            }
+            ProcessLightAttack();
         }
         else if (_inputs.getLightAttack)
         {
-            _inputs.setLightAttack = false;
+            ResetLightAttackInput();
         }
+    }
+
+    private void ProcessLightAttack()
+    {
+        ResetLightAttackInput();
+        if (_hasTarget)
+        {
+            DisableTargetFinder();
+            ApplyLightAttack();
+        }
+    }
+
+    private void ResetLightAttackInput()
+    {
+        _inputs.setLightAttack = false;
     }
 
     private void DisableTargetFinder()
@@ -69,7 +76,7 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
         }
     }
 
-    private void ProcessLightAttack()
+    private void ApplyLightAttack()
     {
         if (!_animations.getInAnimation || _animations.getIsOpportunityWindow)
         {
