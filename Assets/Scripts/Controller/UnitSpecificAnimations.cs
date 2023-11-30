@@ -7,6 +7,7 @@ public class UnitSpecificAnimations : MonoBehaviour
     [SerializeField] private BasicRigidBodyPush _bodyPush;
 
     private int _animIDLightAttack;
+    private int _animIDBasicCombo;
 
     private int _currentAnimID;
 
@@ -33,6 +34,16 @@ public class UnitSpecificAnimations : MonoBehaviour
     private void Start()
     {
         _animIDLightAttack = Animator.StringToHash("LightAttack");
+        _animIDBasicCombo = Animator.StringToHash("BasicCombo");
+    }
+
+    public void ApplyBasicComboAnimation()
+    {
+        if (_animator != null)
+        {
+            _currentAnimID = _animIDBasicCombo;
+            _animator.SetBool(_currentAnimID, true);
+        }
     }
 
     public void ApplyLightAttackAnimation()
