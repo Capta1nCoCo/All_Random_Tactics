@@ -5,7 +5,6 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
 {
     private ART_Inputs _inputs;
     private UnitSpecificAnimations _animations;
-    private TargetFinder _unitTargetFinder;
 
     private bool _hasTarget;
 
@@ -18,7 +17,6 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
     public void SetCurrentUnit(UnitArmature unit)
     {
         _animations = unit.getUnitSpecificAnimations;
-        _unitTargetFinder = unit.getTargetFinder;
     }
 
     private void OnEnable()
@@ -43,7 +41,7 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
 
     private void Attack()
     {
-        if (_animations != null && _inputs.getLightAttack)
+        if (_animations != null && _inputs.getLightAttack && _animations.getIsOpportunityWindow)
         {
             ProcessLightAttack();
         }
@@ -58,7 +56,6 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
         ResetLightAttackInput();
         if (_hasTarget)
         {
-            DisableTargetFinder();
             ApplyLightAttack();
         }
     }
@@ -68,14 +65,7 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
         _inputs.setLightAttack = false;
     }
 
-    private void DisableTargetFinder()
-    {
-        if (_unitTargetFinder != null)
-        {
-            _unitTargetFinder.gameObject.SetActive(false);
-        }
-    }
-
+    // TODO: check conditionals and remove deprecated
     private void ApplyLightAttack()
     {
         if (!_animations.getInAnimation || _animations.getIsOpportunityWindow)

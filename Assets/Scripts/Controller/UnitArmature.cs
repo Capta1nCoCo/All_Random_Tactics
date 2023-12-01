@@ -7,6 +7,7 @@ public class UnitArmature : MonoBehaviour
     [SerializeField] private GameObject _unitCameraRoot;
     [SerializeField] private GameObject _unitCamera;
     [SerializeField] private TargetFinder _targetFinder;
+    [SerializeField] private UnitAbilities _unitAbilities;
 
     [SerializeField] private AudioClip LandingAudioClip;
     [SerializeField] private AudioClip[] FootstepAudioClips;
@@ -24,6 +25,7 @@ public class UnitArmature : MonoBehaviour
     public UnitSpecificAnimations getUnitSpecificAnimations { get {  return _unitSpecificAnimations; } }
     public List<Transform> getAvaliableTargets { get { return _avaliableTargets; } }
     public TargetFinder getTargetFinder { get { return _targetFinder; } }
+    public UnitAbilities getUnitAbilities {  get { return _unitAbilities; } }
 
     private void Awake()
     {

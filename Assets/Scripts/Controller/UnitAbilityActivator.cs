@@ -9,6 +9,11 @@ public class UnitAbilityActivator : MonoBehaviour, ICurrentUnitUser
         _unitTargetFinder = unit.getTargetFinder;
     }
 
+    public void HideAbilityActivationArea()
+    {
+        SetActiveTargetFinder(false);
+    }
+
     public void ShowAbilityActivationArea(float abilityRadius)
     {
         if (_unitTargetFinder != null)
@@ -23,6 +28,11 @@ public class UnitAbilityActivator : MonoBehaviour, ICurrentUnitUser
     private void FindTargetsInRadius(float radius)
     {
         _unitTargetFinder.transform.localScale = new Vector3(radius, _unitTargetFinder.transform.localScale.y, radius);
-        _unitTargetFinder.gameObject.SetActive(true);
+        SetActiveTargetFinder(true);
+    }
+
+    private void SetActiveTargetFinder(bool value)
+    {
+        _unitTargetFinder.gameObject.SetActive(value);
     }
 }
