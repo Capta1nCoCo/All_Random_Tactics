@@ -35,6 +35,16 @@ public class UnitSpecificAnimations : MonoBehaviour
         _animIDLightAttack = Animator.StringToHash("LightAttack");
     }
 
+    public void ApplyAbilityAnimation(string id)
+    {
+        if (_animator != null)
+        {
+            int abilityAnimID = Animator.StringToHash(id);
+            _currentAnimID = abilityAnimID;
+            _animator.SetBool(_currentAnimID, true);
+        }
+    }
+
     public void ApplyLightAttackAnimation()
     {
         if (_animator != null)

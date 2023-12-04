@@ -7,11 +7,11 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
 {
     [SerializeField] private CinemachineVirtualCamera _lockOnCamera;
 
-    private Transform _unitTransform;
-    private List<Transform> _avaliableTargets;
-    private Transform _currentTarget;
-
     private int _currentTargetIndex;
+
+    private List<Transform> _avaliableTargets;
+    private Transform _unitTransform;
+    private Transform _currentTarget;
 
     private ART_Inputs _inputs;
     private UnitGravity _gravity;
@@ -32,7 +32,7 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
 
     public void LockOnCurrentTarget()
     {
-        LockOn(_currentTarget);
+        LockOnTarget(_currentTarget);
     }
 
     public void ReleaseCurrentTarget()
@@ -42,19 +42,34 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
 
     private void Update()
     {
+        LockOn();
+    }
+
+    private void LockOn()
+    {
         if (_inputs.getLockOn)
         {
-            _inputs.setLockOn = false;
-            if (_gravity.getGrounded)
-            {
-                LockOnAvaliableTarget();
-            }
+            ProcessLockOn();
         }
         else if (_inputs.getEsc && _lockOnCamera.gameObject.activeSelf)
         {
-            _inputs.setEsc = false;
-            ReleaseLockOn();
+            ResetLockOn();
         }
+    }
+
+    private void ProcessLockOn()
+    {
+        _inputs.setLockOn = false;
+        if (_gravity.getGrounded)
+        {
+            LockOnAvaliableTarget();
+        }
+    }
+
+    private void ResetLockOn()
+    {
+        _inputs.setEsc = false;
+        ReleaseLockOn();
     }
 
     private void LockOnAvaliableTarget()
@@ -81,11 +96,11 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
             GameEvents.OnLockOn?.Invoke(target);
             _lockOnCamera.gameObject.SetActive(target);
             _lockOnCamera.LookAt = target;
-            LockOn(target);
+            LockOnTarget(target);
         }
     }
 
-    private void LockOn(Transform target)
+    private void LockOnTarget(Transform target)
     {
         if (target != null)
         {

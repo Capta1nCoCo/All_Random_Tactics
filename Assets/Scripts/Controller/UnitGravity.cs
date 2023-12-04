@@ -30,7 +30,6 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     [Tooltip("What layers the character uses as ground")]
     [SerializeField] private LayerMask GroundLayers;
 
-    // timeout deltatime
     private float _jumpTimeoutDelta;
     private float _fallTimeoutDelta;
 
@@ -55,7 +54,11 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
 
     private void Start()
     {
-        // reset our timeouts on start
+        ResetTimeouts();
+    }
+
+    private void ResetTimeouts()
+    {
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
@@ -113,20 +116,18 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     {
         ResetFallTimeoutTimer();
         _unitAnimations.ResetGravityBasedAnimations();
-        StopVelocityDropping();
+        StopVelocityDroppingWhenGrounded();
         Jump();
         ApplyJumpTimeout();
     }
 
     private void ResetFallTimeoutTimer()
     {
-        // reset the fall timeout timer
         _fallTimeoutDelta = FallTimeout;
     }
 
-    private void StopVelocityDropping()
+    private void StopVelocityDroppingWhenGrounded()
     {
-        // stop our velocity dropping infinitely when grounded
         if (_verticalVelocity < 0.0f)
         {
             _verticalVelocity = -2f;
@@ -136,7 +137,6 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     private void Jump()
     {
         LockJumping();
-        // Jump
         if (_input.getJump && _jumpTimeoutDelta <= 0.0f)
         {
             CalculateJumpVelocity();
@@ -160,7 +160,6 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
 
     private void ApplyJumpTimeout()
     {
-        // jump timeout
         if (_jumpTimeoutDelta >= 0.0f)
         {
             _jumpTimeoutDelta -= Time.deltaTime;
@@ -171,18 +170,16 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
     {
         ResetJumpTimeoutTimer();
         ApplyFallTimeout();
-        PreventJumping();
+        PreventJumpingWhileAirborne();
     }
 
     private void ResetJumpTimeoutTimer()
     {
-        // reset the jump timeout timer
         _jumpTimeoutDelta = JumpTimeout;
     }
 
     private void ApplyFallTimeout()
     {
-        // fall timeout
         if (_fallTimeoutDelta >= 0.0f)
         {
             _fallTimeoutDelta -= Time.deltaTime;
@@ -193,9 +190,8 @@ public class UnitGravity : MonoBehaviour, ICurrentUnitUser
         }
     }
 
-    private void PreventJumping()
+    private void PreventJumpingWhileAirborne()
     {
-        // if we are not grounded, do not jump
         _input.setJump = false;
     }
 
