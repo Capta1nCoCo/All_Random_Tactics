@@ -1,7 +1,7 @@
 using UnityEngine;
 using Zenject;
 
-public class UnitAttack : MonoBehaviour, ICurrentUnitUser
+public class UnitComboAttack : MonoBehaviour, ICurrentUnitUser
 {
     private ART_Inputs _inputs;
     private UnitSpecificAnimations _animations;
@@ -36,41 +36,31 @@ public class UnitAttack : MonoBehaviour, ICurrentUnitUser
 
     private void Update()
     {
-        Attack();
+        ComboAttack();
     }
 
-    private void Attack()
+    private void ComboAttack()
     {
-        if (_animations != null && _inputs.getLightAttack && _animations.getIsOpportunityWindow)
+        if (_animations != null)
         {
-            ProcessLightAttack();
-        }
-        else if (_inputs.getLightAttack)
-        {
-            ResetLightAttackInput();
+            if (_inputs.getLightAttack && _animations.getIsOpportunityWindow)
+            {
+                ProgressLightCombo();
+            }
         }
     }
 
-    private void ProcessLightAttack()
+    private void ProgressLightCombo()
     {
-        ResetLightAttackInput();
+        _inputs.setLightAttack = false;
         if (_hasTarget)
         {
             ApplyLightAttack();
         }
     }
 
-    private void ResetLightAttackInput()
-    {
-        _inputs.setLightAttack = false;
-    }
-
-    // TODO: check conditionals and remove deprecated
     private void ApplyLightAttack()
     {
-        if (!_animations.getInAnimation || _animations.getIsOpportunityWindow)
-        {
-            _animations.ApplyLightAttackAnimation();
-        }
+        _animations.ApplyLightAttackAnimation();
     }
 }

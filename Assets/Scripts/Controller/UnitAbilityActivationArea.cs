@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UnitAbilityActivator : MonoBehaviour, ICurrentUnitUser
+public class UnitAbilityActivationArea : MonoBehaviour, ICurrentUnitUser
 {
     private TargetFinder _unitTargetFinder;
 
@@ -33,6 +33,9 @@ public class UnitAbilityActivator : MonoBehaviour, ICurrentUnitUser
 
     private void SetActiveTargetFinder(bool value)
     {
-        _unitTargetFinder.gameObject.SetActive(value);
+        if (_unitTargetFinder != null)
+        {
+            _unitTargetFinder.gameObject.SetActive(value);
+        }
     }
 }

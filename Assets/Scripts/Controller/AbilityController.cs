@@ -13,12 +13,12 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
     private bool _hasTarget;
 
     private ART_Inputs _inputs;
-    private UnitAbilityActivator _activator;
+    private UnitAbilityActivationArea _activator;
     private LockOnSystem _lockOnSystem;
     private UnitSpecificAnimations _animations;
 
     [Inject]
-    public void InjectDependencies(ART_Inputs inputs, UnitAbilityActivator activator, LockOnSystem lockOnSystem)
+    public void InjectDependencies(ART_Inputs inputs, UnitAbilityActivationArea activator, LockOnSystem lockOnSystem)
     {
         _inputs = inputs;
         _activator = activator;
@@ -37,11 +37,15 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
             _abilityDatas = null;
             Debug.Log($"{unit.name} has no abilities");
         }
+        InitAbilityData();
+    }
 
+    private void InitAbilityData()
+    {
         if (_abilityDatas != null)
         {
-            // TEMP
-            AbilityData abilityData = _abilityDatas[0];
+            const int tempAbilityIndex = 0;
+            AbilityData abilityData = _abilityDatas[tempAbilityIndex];
             _abilityName = abilityData.getName;
             _abilityRadius = abilityData.getActivationRadius;
             _abilityMenuUI.SetAbilityName(_abilityName);
@@ -75,32 +79,64 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
     {
         if (_abilityMenuUI != null)
         {
-            if (_inputs.getEsc)
-            {
-                _inputs.setEsc = false;
-                if (!IsAbilityMenuUIActive())
-                {
-                    SetActiveUIElements(true);
-                    _activator.ShowAbilityActivationArea(_abilityRadius);
-                }
-                else
-                {
-                    SetActiveUIElements(false);
-                    _activator.HideAbilityActivationArea();
-                    _lockOnSystem.ReleaseCurrentTarget();
-                }
-            }
+            AbilityMenu();
+            ActivateAbility();
+        }
+    }
 
+    private void AbilityMenu()
+    {
+        if (_inputs.getEsc)
+        {
+            _inputs.setEsc = false;
+            ToggleAbilityMenu();
+        }
+    }
+
+    private void ToggleAbilityMenu()
+    {
+        if (!IsAbilityMenuUIActive())
+        {
+            OpenAbilityMenu();
+        }
+        else
+        {
+            CloseAbilityMenu();
+        }
+    }
+
+    private void OpenAbilityMenu()
+    {
+        SetActiveUIElements(true);
+        _activator.ShowAbilityActivationArea(_abilityRadius);
+    }
+
+    private void CloseAbilityMenu()
+    {
+        SetActiveUIElements(false);
+        _activator.HideAbilityActivationArea();
+        _lockOnSystem.ReleaseCurrentTarget();
+    }
+
+    private void ActivateAbility()
+    {
+        if (_animations != null)
+        {
             if (_inputs.getLightAttack && IsAbilityMenuUIActive())
             {
                 _inputs.setLightAttack = false;
-                if (_hasTarget && _animations != null)
-                {
-                    SetActiveUIElements(false);
-                    _activator.HideAbilityActivationArea();
-                    _animations.ApplyAbilityAnimation(_abilityName);
-                }
+                StartAbilityAnimation();
             }
+        }
+    }
+
+    private void StartAbilityAnimation()
+    {
+        if (_hasTarget)
+        {
+            SetActiveUIElements(false);
+            _activator.HideAbilityActivationArea();
+            _animations.ApplyAbilityAnimation(_abilityName);
         }
     }
 
