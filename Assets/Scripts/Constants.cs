@@ -6,4 +6,10 @@ public static class Constants
         public const int Character = 7;
         public const int Enemy = 8;
     }
+
+    public static class AbilityNames
+    {
+        public const string BasicCombo = "BasicCombo";
+        public const string Charge = "Charge";
+    }
 }

@@ -4,6 +4,8 @@ using Zenject;
 [RequireComponent(typeof(Animator))]
 public class UnitSpecificAnimations : MonoBehaviour
 {
+    private const string LIGHT_ATTACK = "LightAttack";
+
     [SerializeField] private BasicRigidBodyPush _bodyPush;
 
     private int _animIDLightAttack;
@@ -32,7 +34,7 @@ public class UnitSpecificAnimations : MonoBehaviour
 
     private void Start()
     {
-        _animIDLightAttack = Animator.StringToHash("LightAttack");
+        _animIDLightAttack = Animator.StringToHash(LIGHT_ATTACK);
     }
 
     public void ApplyAbilityAnimation(string id)

@@ -622,8 +622,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilityDatas:
-  - _name: BasicCombo
+  - _name: 1
     _activationRadius: 2
+  - _name: 2
+    _activationRadius: 10
 --- !u!4 &550490152
 Transform:
   m_ObjectHideFlags: 0
@@ -2231,7 +2233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilityMenuUI: {fileID: 328012555}
-  _abilityRadius: 2
 --- !u!1001 &529024914096089922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2698,7 +2699,7 @@ PrefabInstance:
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.20000005
+      value: -4.8
       objectReference: {fileID: 0}
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
