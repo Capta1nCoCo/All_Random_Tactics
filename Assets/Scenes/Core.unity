@@ -625,7 +625,7 @@ MonoBehaviour:
   - _name: 1
     _activationRadius: 2
   - _name: 2
-    _activationRadius: 10
+    _activationRadius: 30
 --- !u!4 &550490152
 Transform:
   m_ObjectHideFlags: 0
@@ -2699,7 +2699,7 @@ PrefabInstance:
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.8
+      value: 0.20000005
       objectReference: {fileID: 0}
     - target: {fileID: 193497541849733698, guid: d0c34e27d0b0c8c40b32dc7425fb7c89,
         type: 3}
