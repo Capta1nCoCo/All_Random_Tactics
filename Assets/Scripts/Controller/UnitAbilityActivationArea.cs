@@ -18,17 +18,17 @@ public class UnitAbilityActivationArea : MonoBehaviour, ICurrentUnitUser
     {
         if (_unitTargetFinder != null)
         {
-            if (!_unitTargetFinder.gameObject.activeSelf)
-            {
-                FindTargetsInRadius(abilityRadius);
-            }
+            FindTargetsInRadius(abilityRadius);
         }
     }
 
     private void FindTargetsInRadius(float radius)
     {
         _unitTargetFinder.transform.localScale = new Vector3(radius, _unitTargetFinder.transform.localScale.y, radius);
-        SetActiveTargetFinder(true);
+        if (!_unitTargetFinder.gameObject.activeSelf)
+        {
+            SetActiveTargetFinder(true);
+        }
     }
 
     private void SetActiveTargetFinder(bool value)

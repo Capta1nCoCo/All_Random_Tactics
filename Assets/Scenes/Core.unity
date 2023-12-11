@@ -622,8 +622,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilityDatas:
-  - _name: BasicCombo
+  - _name: 1
     _activationRadius: 2
+  - _name: 2
+    _activationRadius: 30
 --- !u!4 &550490152
 Transform:
   m_ObjectHideFlags: 0
@@ -2231,7 +2233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _abilityMenuUI: {fileID: 328012555}
-  _abilityRadius: 2
 --- !u!1001 &529024914096089922
 PrefabInstance:
   m_ObjectHideFlags: 0

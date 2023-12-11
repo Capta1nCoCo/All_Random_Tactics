@@ -9,7 +9,7 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
     private AbilityData[] _abilityDatas;
     private string _abilityName;
     private float _abilityRadius;
-
+    private int _currentAbilityIndex;
     private bool _hasTarget;
 
     private ART_Inputs _inputs;
@@ -37,19 +37,24 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
             _abilityDatas = null;
             Debug.Log($"{unit.name} has no abilities");
         }
-        InitAbilityData();
+        InitUnitAbilities();
     }
 
-    private void InitAbilityData()
+    private void InitUnitAbilities()
     {
         if (_abilityDatas != null)
         {
-            const int tempAbilityIndex = 0;
-            AbilityData abilityData = _abilityDatas[tempAbilityIndex];
-            _abilityName = abilityData.getName;
-            _abilityRadius = abilityData.getActivationRadius;
-            _abilityMenuUI.SetAbilityName(_abilityName);
+            _currentAbilityIndex = 0;
+            InitNewAbility();
         }
+    }
+
+    private void InitNewAbility()
+    {
+        AbilityData abilityData = _abilityDatas[_currentAbilityIndex];
+        _abilityName = abilityData.GetName();
+        _abilityRadius = abilityData.getActivationRadius;
+        _abilityMenuUI.SetAbilityName(_abilityName);
     }
 
     private void OnEnable()
@@ -80,6 +85,7 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
         if (_abilityMenuUI != null)
         {
             AbilityMenu();
+            SwitchAbility();
             ActivateAbility();
         }
     }
@@ -89,7 +95,10 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
         if (_inputs.getEsc)
         {
             _inputs.setEsc = false;
-            ToggleAbilityMenu();
+            if (_abilityDatas != null)
+            {
+                ToggleAbilityMenu();
+            }
         }
     }
 
@@ -116,6 +125,65 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
         SetActiveUIElements(false);
         _activator.HideAbilityActivationArea();
         _lockOnSystem.ReleaseCurrentTarget();
+    }
+
+    private void SwitchAbility()
+    {
+        if (IsAbilityMenuUIActive() && _abilityDatas.Length > 1)
+        {
+            ShowNextAbility();
+            ShowPrevAbility();
+        }
+    }
+
+    private void ShowNextAbility()
+    {
+        if (_inputs.getNextUnit)
+        {
+            _inputs.setNextUnit = false;
+            SwitchToNextIndex();
+            ShowNewAbility();
+        }
+    }
+
+    private void ShowPrevAbility()
+    {
+        if (_inputs.getPrevUnit)
+        {
+            _inputs.setPrevUnit = false;
+            SwitchToPrevIndex();
+            ShowNewAbility();
+        }
+    }
+
+    private void SwitchToNextIndex()
+    {
+        if (_currentAbilityIndex < _abilityDatas.Length - 1)
+        {
+            _currentAbilityIndex++;
+        }
+        else
+        {
+            _currentAbilityIndex = 0;
+        }
+    }
+
+    private void SwitchToPrevIndex()
+    {
+        if (_currentAbilityIndex > 0)
+        {
+            _currentAbilityIndex--;
+        }
+        else
+        {
+            _currentAbilityIndex = _abilityDatas.Length - 1;
+        }
+    }
+
+    private void ShowNewAbility()
+    {
+        InitNewAbility();
+        _activator.ShowAbilityActivationArea(_abilityRadius);
     }
 
     private void ActivateAbility()
@@ -148,5 +216,6 @@ public class AbilityController : MonoBehaviour, ICurrentUnitUser
     private void SetActiveUIElements(bool value)
     {
         _abilityMenuUI.gameObject.SetActive(value);
+        GameEvents.OnAbilityUIMenu?.Invoke(value);
     }
 }

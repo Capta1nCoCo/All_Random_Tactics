@@ -6,11 +6,9 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] private UnitArmature[] _unitArmatures;
 
     private int _currentUnitIndex = 0;
-
     private bool _lockSwitching;
 
     public delegate void InitUnitMethod(UnitArmature newUnitArmature);
-
     private InitUnitMethod InitNewUnit;
 
     private ART_Inputs _inputs;
@@ -31,29 +29,33 @@ public class UnitSwitcher : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnLockOn += OnLockOn;
+        GameEvents.OnLockOn += LockSwitching;
+        GameEvents.OnAbilityUIMenu += LockSwitching;
     }
 
     private void OnDisable()
     {
-        GameEvents.OnLockOn -= OnLockOn;
+        GameEvents.OnLockOn -= LockSwitching;
+        GameEvents.OnAbilityUIMenu -= LockSwitching;
     }
 
-    private void OnLockOn(bool locked)
+    private void LockSwitching(bool locked)
     {
         _lockSwitching = locked;
     }
 
     private void Update()
     {
-        if (_unitGravity.getGrounded && !_lockSwitching)
+        if (!_lockSwitching)
         {
-            SwitchUnit();
-        }
-        else if (_inputs.getNextUnit || _inputs.getPrevUnit)
-        {
-            _inputs.setNextUnit = false;
-            _inputs.setPrevUnit = false;
+            if (_unitGravity.getGrounded)
+            {
+                SwitchUnit();
+            }
+            else if (_inputs.getNextUnit || _inputs.getPrevUnit)
+            {
+                DisposeSwitchInputs();
+            }
         }
     }
 
@@ -71,15 +73,20 @@ public class UnitSwitcher : MonoBehaviour
         if (_inputs.getNextUnit)
         {
             _inputs.setNextUnit = false;
-            if (_currentUnitIndex < _unitArmatures.Length - 1)
-            {
-                _currentUnitIndex++;
-            }
-            else
-            {
-                _currentUnitIndex = 0;
-            }
+            SwitchToNextIndex();
             InitNewUnit(_unitArmatures[_currentUnitIndex]);
+        }
+    }
+
+    private void SwitchToNextIndex()
+    {
+        if (_currentUnitIndex < _unitArmatures.Length - 1)
+        {
+            _currentUnitIndex++;
+        }
+        else
+        {
+            _currentUnitIndex = 0;
         }
     }
 
@@ -88,15 +95,26 @@ public class UnitSwitcher : MonoBehaviour
         if (_inputs.getPrevUnit)
         {
             _inputs.setPrevUnit = false;
-            if (_currentUnitIndex > 0)
-            {
-                _currentUnitIndex--;
-            }
-            else
-            {
-                _currentUnitIndex = _unitArmatures.Length - 1;
-            }
+            SwitchToPrevIndex();
             InitNewUnit(_unitArmatures[_currentUnitIndex]);
         }
+    }
+
+    private void SwitchToPrevIndex()
+    {
+        if (_currentUnitIndex > 0)
+        {
+            _currentUnitIndex--;
+        }
+        else
+        {
+            _currentUnitIndex = _unitArmatures.Length - 1;
+        }
+    }
+
+    private void DisposeSwitchInputs()
+    {
+        _inputs.setNextUnit = false;
+        _inputs.setPrevUnit = false;
     }
 }

@@ -16,6 +16,8 @@ public class LockOnSystem : MonoBehaviour, ICurrentUnitUser
     private ART_Inputs _inputs;
     private UnitGravity _gravity;
 
+    public Transform getCurrentTarget { get { return _currentTarget; } }
+
     [Inject]
     public void InjectDependencies(ART_Inputs inputs, UnitGravity gravity)
     {
